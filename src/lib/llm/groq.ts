@@ -33,8 +33,12 @@ export class GroqClient implements LlmClient {
       throw new Error(`Groq error ${res.status}: ${text}`);
     }
 
-    const json = (await res.json()) as any;
-    const content = json?.choices?.[0]?.message?.content;
+    type GroqChatCompletion = {
+      choices?: Array<{ message?: { content?: string } }>;
+    };
+
+    const json = (await res.json()) as unknown as GroqChatCompletion;
+    const content = json.choices?.[0]?.message?.content;
     if (!content || typeof content !== "string") {
       throw new Error("Groq response missing choices[0].message.content");
     }
