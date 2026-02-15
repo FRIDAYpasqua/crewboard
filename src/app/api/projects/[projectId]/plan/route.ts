@@ -18,10 +18,20 @@ function safeJsonParse(text: string): unknown {
   return JSON.parse(cleaned);
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: { projectId: string } }
-) {
+function getProjectId(req: Request, params?: { projectId?: string }) {
+  if (params?.projectId) return params.projectId;
+  const pathname = new URL(req.url).pathname;
+  const parts = pathname.split("/").filter(Boolean);
+  const idx = parts.indexOf("projects");
+  return idx >= 0 ? parts[idx + 1] : undefined;
+}
+
+export async function POST(req: Request, { params }: { params: { projectId?: string } }) {
+  const projectId = getProjectId(req, params);
+  if (!projectId) {
+    return NextResponse.json({ ok: false, error: "missing projectId" }, { status: 400 });
+  }
+
   const supabase = createSupabaseServerClient();
   const body = (await req.json().catch(() => null)) as null | { briefText?: string };
   if (!body?.briefText) {
@@ -31,11 +41,14 @@ export async function POST(
   // Save brief
   const briefInsert = await supabase
     .from("briefs")
-    .insert({
-      project_id: params.projectId,
-      source: "paste",
-      extracted_text: body.briefText,
-    })
+    .insert(
+      {
+        project_id: projectId,
+        source: "paste",
+        extracted_text: body.briefText,
+      },
+      { defaultToNull: false }
+    )
     .select("id")
     .single();
 
@@ -102,7 +115,7 @@ export async function POST(
     .from("tasks")
     .insert(
       tasksToInsert.map((t) => ({
-        project_id: params.projectId,
+        project_id: projectId,
         title: t.title,
         description: t.description,
         status: t.status ?? "todo",
