@@ -62,5 +62,5 @@ No teacher/admin view.
 - Basic tests
 
 ## Needed from Filo
-- OpenAI API key (or provider choice)
-- Supabase project creds
+- LLM key (Groq/OpenAI/etc.)
+- Supabase project creds (URL + anon + service role)
