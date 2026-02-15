@@ -14,7 +14,7 @@ Crewboard is a web app that helps student teams (uni + high school) turn a proje
 - Next.js (App Router) + TypeScript
 - Supabase (Auth + Postgres + Storage)
 - Tailwind
-- OpenAI (LLM)
+- Groq (LLM API; OpenAI-compatible)
 - GitHub Actions CI
 
 ## Docs
