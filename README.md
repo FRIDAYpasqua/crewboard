@@ -23,4 +23,10 @@ Crewboard is a web app that helps student teams (uni + high school) turn a proje
 - API/Routes: `docs/ROUTES.md`
 
 ## Local dev
-TBD after planning is locked.
+
+This repo is intentionally keeping installs off the tiny EC2 disk for now.
+
+- Copy `.env.example` → `.env.local` and fill values
+- Then run:
+  - `npm install`
+  - `npm run dev`
