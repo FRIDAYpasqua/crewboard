@@ -63,6 +63,25 @@ Type scale: display-xl 72px → caption 12px, tight tracking for headlines.
 
 ### Cards
 - Glass card: semi-transparent white + blur, soft border, larger radius, hover lift.
+- Featured card: label pill ("Popular") via `::before`.
+
+### Tabs
+- Pills; active uses `--color-primary`.
+
+### Inputs
+- Rounded (lg by default; pill optional), `--shadow-glow` focus ring.
+
+### Badges/Tags
+- Small pill tokens; hover can use primary-light.
+
+### Avatars
+- Round, group overlap with 2px border.
+
+### Motion
+- 100/150/300ms durations; fade/slide/scale; hover-lift.
+
+### Icons
+- Lucide/Heroicons; outlined, 1.5px stroke.
 
 ## Notes
 - Current Crewboard MVP is emerald-accent per earlier choice.
