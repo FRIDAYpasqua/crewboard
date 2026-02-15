@@ -51,6 +51,19 @@ Type scale: display-xl 72px → caption 12px, tight tracking for headlines.
 ## Shadows
 - xs→2xl scale + focus glow ring `rgba(35, 131, 226, 0.3)`
 
+## Components (snippets)
+
+### Buttons
+- Pill shape (`--radius-full`), subtle lift on hover, focus glow ring.
+- Variants: primary / secondary (dark) / outline / ghost / icon.
+
+### Navigation
+- Fixed, centered pill nav with glass background + blur.
+- Active link uses `--color-primary`.
+
+### Cards
+- Glass card: semi-transparent white + blur, soft border, larger radius, hover lift.
+
 ## Notes
 - Current Crewboard MVP is emerald-accent per earlier choice.
 - We can switch to Notion-blue tokens once the end-to-end MVP flow is stable.
