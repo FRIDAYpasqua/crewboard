@@ -86,7 +86,8 @@ export async function POST(req: Request, { params }: { params: { projectId?: str
     );
   }
 
-  const tasksArr = (parsed as any)?.tasks as unknown;
+  type PlanJson = { tasks?: unknown };
+  const tasksArr = (parsed as PlanJson).tasks;
   if (!Array.isArray(tasksArr)) {
     return NextResponse.json(
       { ok: false, error: "LLM JSON missing tasks[]", raw: parsed },
@@ -96,12 +97,19 @@ export async function POST(req: Request, { params }: { params: { projectId?: str
 
   const tasksToInsert: PlannedTask[] = tasksArr
     .slice(0, 20)
-    .map((t: any) => ({
-      title: String(t.title ?? "").slice(0, 120),
-      description: String(t.description ?? ""),
-      status: (t.status === "backlog" || t.status === "todo" ? t.status : "todo") as any,
-      owner: t.owner ? String(t.owner).slice(0, 80) : undefined,
-    }))
+    .map((t: unknown) => {
+      const obj = (t ?? {}) as Partial<Record<string, unknown>>;
+      const statusRaw = obj.status;
+      const status: PlannedTask["status"] =
+        statusRaw === "backlog" || statusRaw === "todo" ? statusRaw : "todo";
+
+      return {
+        title: String(obj.title ?? "").slice(0, 120),
+        description: String(obj.description ?? ""),
+        status,
+        owner: obj.owner ? String(obj.owner).slice(0, 80) : undefined,
+      };
+    })
     .filter((t) => t.title.length > 0);
 
   if (tasksToInsert.length === 0) {
