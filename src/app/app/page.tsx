@@ -6,7 +6,7 @@ export default function AppHomePage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
         <p className="mt-2 text-sm text-[var(--muted-foreground)]">
-          MVP in progress. For now, everything is mocked until Supabase creds land.
+          Demo MVP: Projects → Brief → Generate tasks → Board.
         </p>
       </div>
 
@@ -16,8 +16,7 @@ export default function AppHomePage() {
       >
         <div className="text-sm font-semibold">Quick start</div>
         <div className="mt-2 text-sm text-[var(--muted-foreground)]">
-          Create a project, upload the brief, generate tasks, then run the daily
-          standup.
+          Create a project, paste the brief, generate tasks, then work the board.
         </div>
         <div className="mt-4 flex gap-3">
           <Link

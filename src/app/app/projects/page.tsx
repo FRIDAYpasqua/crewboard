@@ -1,8 +1,26 @@
 import Link from "next/link";
-import { mockDb } from "@/lib/mock/db";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export default function ProjectsPage() {
-  const projects = mockDb.listProjects();
+export default async function ProjectsPage() {
+  const supabase = createSupabaseServerClient();
+  const { data: projects, error } = await supabase
+    .from("projects")
+    .select("id,name,description,due_date,created_at")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    return (
+      <div
+        className="rounded-lg border bg-[var(--muted)] p-5"
+        style={{ borderColor: "var(--border)" }}
+      >
+        <div className="text-sm font-semibold">Failed to load projects</div>
+        <div className="mt-2 text-sm text-[var(--muted-foreground)]">
+          {error.message}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -23,7 +41,7 @@ export default function ProjectsPage() {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        {projects.map((p) => (
+        {(projects ?? []).map((p) => (
           <Link
             key={p.id}
             href={`/app/p/${p.id}`}
@@ -36,13 +54,22 @@ export default function ProjectsPage() {
                 {p.description}
               </div>
             ) : null}
-            {p.dueDate ? (
+            {p.due_date ? (
               <div className="mt-3 text-xs text-[var(--muted-foreground)]">
-                Due: {p.dueDate}
+                Due: {p.due_date}
               </div>
             ) : null}
           </Link>
         ))}
+
+        {projects && projects.length === 0 ? (
+          <div
+            className="rounded-lg border bg-[var(--muted)] p-4 text-sm text-[var(--muted-foreground)]"
+            style={{ borderColor: "var(--border)" }}
+          >
+            No projects yet. Create one.
+          </div>
+        ) : null}
       </div>
     </div>
   );

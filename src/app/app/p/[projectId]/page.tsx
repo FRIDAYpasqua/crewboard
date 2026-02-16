@@ -1,19 +1,27 @@
 import Link from "next/link";
-import { mockDb } from "@/lib/mock/db";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export default function ProjectOverviewPage({
+export default async function ProjectOverviewPage({
   params,
 }: {
   params: { projectId: string };
 }) {
-  const project = mockDb.getProject(params.projectId);
+  const supabase = createSupabaseServerClient();
+  const { data: project, error } = await supabase
+    .from("projects")
+    .select("id,name,description,due_date")
+    .eq("id", params.projectId)
+    .single();
 
-  if (!project) {
+  if (error || !project) {
     return (
-      <div className="rounded-lg border bg-[var(--muted)] p-5" style={{ borderColor: "var(--border)" }}>
+      <div
+        className="rounded-lg border bg-[var(--muted)] p-5"
+        style={{ borderColor: "var(--border)" }}
+      >
         <div className="text-sm font-semibold">Project not found</div>
         <div className="mt-2 text-sm text-[var(--muted-foreground)]">
-          This is mocked data right now.
+          {error?.message ?? "Unknown error"}
         </div>
       </div>
     );
@@ -33,13 +41,30 @@ export default function ProjectOverviewPage({
             {project.description}
           </p>
         ) : null}
+        {project.due_date ? (
+          <p className="mt-2 text-xs text-[var(--muted-foreground)]">
+            Due: {project.due_date}
+          </p>
+        ) : null}
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
         {[
-          { href: `/app/p/${project.id}/brief`, title: "Brief", desc: "Upload or paste the project brief." },
-          { href: `/app/p/${project.id}/board`, title: "Board", desc: "Tasks, owners, and status." },
-          { href: `/app/p/${project.id}/standup`, title: "Standup", desc: "Daily check-in summary." },
+          {
+            href: `/app/p/${project.id}/brief`,
+            title: "Brief",
+            desc: "Paste the brief and generate tasks.",
+          },
+          {
+            href: `/app/p/${project.id}/board`,
+            title: "Board",
+            desc: "Tasks, owners, and status.",
+          },
+          {
+            href: `/app/p/${project.id}/standup`,
+            title: "Standup",
+            desc: "Daily check-in summary.",
+          },
         ].map((c) => (
           <Link
             key={c.title}
