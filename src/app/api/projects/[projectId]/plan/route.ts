@@ -26,7 +26,7 @@ function getProjectId(req: Request, params?: { projectId?: string }) {
   return idx >= 0 ? parts[idx + 1] : undefined;
 }
 
-export async function POST(req: Request, { params }: { params: { projectId?: string } }) {
+export async function POST(req: Request, { params }: { params: { projectId: string } }) {
   const projectId = getProjectId(req, params);
   if (!projectId) {
     return NextResponse.json({ ok: false, error: "missing projectId" }, { status: 400 });

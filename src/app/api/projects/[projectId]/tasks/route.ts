@@ -11,7 +11,7 @@ function getProjectId(req: Request, params?: { projectId?: string }) {
   return idx >= 0 ? parts[idx + 1] : undefined;
 }
 
-export async function GET(req: Request, { params }: { params: { projectId?: string } }) {
+export async function GET(req: Request, { params }: { params: { projectId: string } }) {
   const projectId = getProjectId(req, params);
   if (!projectId) {
     return NextResponse.json({ ok: false, error: "missing projectId" }, { status: 400 });
@@ -28,7 +28,7 @@ export async function GET(req: Request, { params }: { params: { projectId?: stri
   return NextResponse.json({ ok: true, tasks: data });
 }
 
-export async function POST(req: Request, { params }: { params: { projectId?: string } }) {
+export async function POST(req: Request, { params }: { params: { projectId: string } }) {
   const projectId = getProjectId(req, params);
   if (!projectId) {
     return NextResponse.json({ ok: false, error: "missing projectId" }, { status: 400 });
@@ -61,7 +61,7 @@ export async function POST(req: Request, { params }: { params: { projectId?: str
   return NextResponse.json({ ok: true, task: data });
 }
 
-export async function PATCH(req: Request, { params }: { params: { projectId?: string } }) {
+export async function PATCH(req: Request, { params }: { params: { projectId: string } }) {
   const projectId = getProjectId(req, params);
   if (!projectId) {
     return NextResponse.json({ ok: false, error: "missing projectId" }, { status: 400 });
